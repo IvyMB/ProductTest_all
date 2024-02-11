@@ -22,3 +22,10 @@ Certifique-se de ter o Docker e o Docker Compose instalados no seu sistema.
 3. Abra seu navegador e acesse http://localhost:8000.
 
 4. Para interromper a execução da aplicação, pressione Ctrl+C no terminal onde o Docker Compose está sendo executado.
+
+## Autenticação
+- Somente usuários autenticados podem criar, editar e deletar produtos.
+- Usuários não autenticados podem visualizar a lista de produtos e ver detalhes de algum producto.
+
+## Logging
+- A API guarda informações sempre que algum registro foi modificado por algum usuário autenticado.
