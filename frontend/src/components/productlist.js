@@ -66,16 +66,22 @@ const ProductList = ({isLoggedIn}) => {
       loadProducts()
   }, []);
 
-  const openDetailModal = (productId) => {
+  const openDetailModal = async (productId) => {
       // Collecting the selected product data and showing the modal
       setSelectedProductId(productId);
-      setShowDetailModal(true);
-
-      const selectedProduct = products.find((product) => product.id === productId);
-      // Fill the form fields with product data using ID
-      setProductName(selectedProduct.name || '');
-      setProductDescription(selectedProduct.description || '');
-      setProductPrice(selectedProduct.price || 0);
+      await axios.get(`http://127.0.0.1:8000/api/v1/products/${productId}/`,
+          {
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          })
+          .then(response => {
+              setShowDetailModal(true);
+          })
+          .catch(error => {
+              // Erro geral
+              console.error('Erro durante a execução:', error.message);
+          })
     }
 
   const openEditForm = (productId) => {
