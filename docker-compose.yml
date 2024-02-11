@@ -5,8 +5,8 @@ services:
     image: postgres:latest
     container_name: pgs-db
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=134qwefd
+      - POSTGRES_USER=YOURROOTUSER
+      - POSTGRES_PASSWORD=YOURROOTPASSWORD
       - POSTGRES_DB=product
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
@@ -23,10 +23,10 @@ services:
       context: ./backend
     environment:
       DJANGO_DB_NAME: product
-      DJANGO_DB_USER: postgres
-      DJANGO_DB_PASSWORD: 134qwefd
-      DJANGO_DB_HOST: pgs-db 
-      DJANGO_DB_PORT: 5432
+      DJANGO_DB_USER: YOURROOTUSER
+      DJANGO_DB_PASSWORD: YOURROOTPASSWORD
+      DJANGO_DB_HOST: YOURHOSTDB
+      DJANGO_DB_PORT: YOURDBPORT
     ports:
       - "8000:8000"
     depends_on:
