@@ -6,9 +6,11 @@ const ProductList = ({isLoggedIn}) => {
   const [products, setProducts] = useState([]);
   const [tokenValid, setTokenValid] = useState(false)
 
+  const [showDetailModal, setShowDetailModal] = useState(false)
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
   const [selectedProductName, setSelectedProductName] = useState('');
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [formError, setFormError] = useState('')
@@ -63,6 +65,18 @@ const ProductList = ({isLoggedIn}) => {
       // Pré loading the product list data
       loadProducts()
   }, []);
+
+  const openDetailModal = (productId) => {
+      // Collecting the selected product data and showing the modal
+      setSelectedProductId(productId);
+      setShowDetailModal(true);
+
+      const selectedProduct = products.find((product) => product.id === productId);
+      // Fill the form fields with product data using ID
+      setProductName(selectedProduct.name || '');
+      setProductDescription(selectedProduct.description || '');
+      setProductPrice(selectedProduct.price || 0);
+    }
 
   const openEditForm = (productId) => {
       // Collecting the selected product data and showing the modal
@@ -207,6 +221,15 @@ const ProductList = ({isLoggedIn}) => {
       setSelectedProductName(null)
   };
 
+  const handleCloseDetailModal = () => {
+      setShowDetailModal(false);
+      setSelectedProductId(null);
+      setProductName('');
+      setProductDescription('');
+      setProductPrice(0);
+      setFormError('')
+  };
+
   const handleCloseEditModal = () => {
     setShowEditModal(false);
     setSelectedProductId(null);
@@ -232,14 +255,14 @@ const ProductList = ({isLoggedIn}) => {
   return (
     <div>
       <h2>Product list</h2>
-        <Button onClick={() => setShowCreateModal(true)}> Create</Button>
+        {isLoggedIn && <Button onClick={() => setShowCreateModal(true)}> Create</Button>}
       <table className="table">
         <thead>
           <tr>
             <th>ID</th>
             <th>Name</th>
             <th>Price</th>
-            {isLoggedIn && <th>Actions</th>}
+                {isLoggedIn && <th>Actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -248,14 +271,14 @@ const ProductList = ({isLoggedIn}) => {
               <td>{product.id}</td>
               <td>{product.name}</td>
               <td>{product.price}</td>
-                {isLoggedIn && (
-                <>
-                  <td>
-                    <button onClick={() => openEditForm(product.id)}>Edit</button>
-                    <button onClick={() => openDeleteForm(product.id, product.name)}>Delete</button>
-                  </td>
-                </>
-              )}
+                <td>
+                  {isLoggedIn && (
+                    <>
+                        <button onClick={() => openEditForm(product.id)}>Edit</button>
+                        <button onClick={() => openDeleteForm(product.id, product.name)}>Delete</button>
+                        </>)}
+                    <button onClick={() => openDetailModal(product.id)}>Detail</button>
+                </td>
             </tr>
           ))}
         </tbody>
@@ -337,8 +360,39 @@ const ProductList = ({isLoggedIn}) => {
                 <Button variant="danger" onClick={handleCloseCreateModal}>
                     Close
                 </Button>
-                <Button variant="success" onClick={handleCreateProduct}>
+                 <Button variant="success" onClick={handleCreateProduct}>
                     Save
+                </Button>
+            </Modal.Footer>
+        </Modal>
+
+        <Modal show={showDetailModal} onHide={handleCloseDetailModal}>
+             <Modal.Header closeButton>
+                <Modal.Title>Create a new product:</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <div className="p-2 mx-1">
+                    <div className="pt-3">
+                        <span className="fw-bold mx-2">Id :</span>
+                        <span>{selectedProductId}</span>
+                    </div>
+                    <div className="pt-3">
+                        <span className="fw-bold mx-2">Name :</span>
+                        <span>{productName}</span>
+                    </div>
+                    <div className="pt-3">
+                        <span className="fw-bold mx-2">Description :</span>
+                        <span>{productDescription}</span>
+                    </div>
+                    <div className="pt-3">
+                        <span className="fw-bold mx-2">Price :</span>
+                        <span>{productPrice}</span>
+                    </div>
+                </div>
+            </Modal.Body>
+            <Modal.Footer>
+            <Button variant="danger" onClick={handleCloseDetailModal}>
+                    Close
                 </Button>
             </Modal.Footer>
         </Modal>
