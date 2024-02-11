@@ -76,7 +76,11 @@ const ProductList = ({isLoggedIn}) => {
           },
           })
           .then(response => {
+              setProductName(response.data.name);
+              setProductDescription(response.data.description);
+              setProductPrice(response.data.price);
               setShowDetailModal(true);
+
           })
           .catch(error => {
               // Erro geral
